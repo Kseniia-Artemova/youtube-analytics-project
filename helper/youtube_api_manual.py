@@ -48,6 +48,7 @@ for playlist in playlists['items']:
 '''
 получить данные по видеороликам в плейлисте
 docs: https://developers.google.com/youtube/v3/docs/playlistItems/list
+>>>>>>> parent of 37a13f9 (did the dirt (#1))
 
 получить id плейлиста можно из браузера, например
 https://www.youtube.com/playlist?list=PLH-XmS0lSi_zdhYvcwUfv0N88LQRt6UZn
@@ -64,7 +65,6 @@ playlist_videos = youtube.playlistItems().list(playlistId=playlist_id,
 video_ids: list[str] = [video['contentDetails']['videoId'] for video in playlist_videos['items']]
 # print(video_ids)
 
-
 '''
 вывести длительности видеороликов из плейлиста
 docs: https://developers.google.com/youtube/v3/docs/videos/list
@@ -74,12 +74,12 @@ video_response = youtube.videos().list(part='contentDetails,statistics',
                                        ).execute()
 # printj(video_response)
 
+
 for video in video_response['items']:
     # YouTube video duration is in ISO 8601 format
     iso_8601_duration = video['contentDetails']['duration']
     duration = isodate.parse_duration(iso_8601_duration)
     print(duration)
-
 
 '''
 получить статистику видео по его id
@@ -95,3 +95,4 @@ video_title: str = video_response['items'][0]['snippet']['title']
 view_count: int = video_response['items'][0]['statistics']['viewCount']
 like_count: int = video_response['items'][0]['statistics']['likeCount']
 comment_count: int = video_response['items'][0]['statistics']['commentCount']
+
