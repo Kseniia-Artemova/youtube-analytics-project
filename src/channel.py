@@ -4,6 +4,36 @@ from googleapiclient.discovery import build
 from googleapiclient.discovery import Resource
 from src.utils import find_value
 from functools import total_ordering
+from abc import ABC, abstractmethod
+
+
+class YouTube(ABC):
+
+    service = "youtube"
+    version = "v3"
+    name_key = "API_KEY"
+
+    @classmethod
+    def get_service(cls) -> Resource:
+        """Создаёт специальный объект для работы с API"""
+
+        # API_KEY скопирован из гугла и вставлен в переменные окружения
+        api_key: str = os.getenv(cls.name_key)
+
+        manager = build(cls.service, cls.version, developerKey=api_key)
+        return manager
+
+    @abstractmethod
+    def get_info(self):
+        """Возвращает информацию об определенном объекте Ютуб на основании id объекта"""
+
+        pass
+
+    @abstractmethod
+    def set_atr(self):
+        """Устанавливает основные атрибуты объекта на основании его id"""
+
+        pass
 
 
 @total_ordering
@@ -91,16 +121,6 @@ class Channel:
 
         # выводит словарь в json-подобном удобном формате с отступами
         print(json.dumps(channel, indent=2, ensure_ascii=False))
-
-    @classmethod
-    def get_service(cls) -> Resource:
-        """Создаёт специальный объект для работы с API"""
-
-        # API_KEY скопирован из гугла и вставлен в переменные окружения
-        api_key: str = os.getenv(cls.name_key)
-
-        manager = build(cls.service, cls.version, developerKey=api_key)
-        return manager
 
     def get_attributes_dict(self) -> dict:
         """Возвращает словарь со свойствами класса и их значениями"""

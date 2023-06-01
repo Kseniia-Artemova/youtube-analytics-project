@@ -1,8 +1,8 @@
-from src.channel import Channel
+from src.channel import YouTube
 from src.utils import find_value
 
 
-class Video(Channel):
+class Video(YouTube):
     """Класс для ютуб-видео"""
 
     def __init__(self, video_id: str) -> None:
