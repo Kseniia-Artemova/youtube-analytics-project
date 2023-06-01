@@ -1,15 +1,10 @@
 import datetime
-import json
-import os
-from googleapiclient.discovery import build
-from googleapiclient.discovery import Resource
 from src.utils import find_value
-from functools import total_ordering
-from src.channel import Channel
 import isodate
+from src.channel import YouTube
 
 
-class PlayList(Channel):
+class PlayList(YouTube):
     """Класс для описания плейлиста"""
 
     def __init__(self, playlist_id: str) -> None:
@@ -26,22 +21,6 @@ class PlayList(Channel):
         self.__total_duration = self.get_total_duration()
 
     @property
-    def title(self) -> str:
-        return self.__title
-
-    @title.setter
-    def title(self, title: str):
-        self.__title = title
-
-    @property
-    def url(self) -> str:
-        return self.__url
-
-    @url.setter
-    def url(self, url: str):
-        self.__url = url
-
-    @property
     def playlist_id(self) -> str:
         return self.__playlist_id
 
@@ -49,7 +28,7 @@ class PlayList(Channel):
     def total_duration(self) -> datetime:
         return self.__total_duration
 
-    def get_playlist_info(self) -> dict:
+    def get_info(self) -> dict:
         """Возвращает данные о плейлисте по его id"""
 
         playlist_response = self.manager.playlists().list(part='snippet',
@@ -109,7 +88,7 @@ class PlayList(Channel):
         на основании полученных по id данных плейлиста
         """
 
-        playlist_videos = self.get_playlist_info()
+        playlist_videos = self.get_info()
 
         self.title = find_value(playlist_videos, "title")
         self.url = f'https://www.youtube.com/playlist?list={self.__playlist_id}'
