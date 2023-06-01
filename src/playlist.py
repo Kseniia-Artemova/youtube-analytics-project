@@ -1,16 +1,17 @@
 import datetime
-import json
 import os
 from googleapiclient.discovery import build
 from googleapiclient.discovery import Resource
 from src.utils import find_value
-from functools import total_ordering
-from src.channel import Channel
 import isodate
 
 
-class PlayList(Channel):
+class PlayList:
     """Класс для описания плейлиста"""
+
+    service = "youtube"
+    version = "v3"
+    name_key = "API_KEY"
 
     def __init__(self, playlist_id: str) -> None:
         """Экземпляр инициализируется по id плейлиста. Дальше все данные будут подтягиваться по API."""
@@ -26,28 +27,22 @@ class PlayList(Channel):
         self.__total_duration = self.get_total_duration()
 
     @property
-    def title(self) -> str:
-        return self.__title
-
-    @title.setter
-    def title(self, title: str):
-        self.__title = title
-
-    @property
-    def url(self) -> str:
-        return self.__url
-
-    @url.setter
-    def url(self, url: str):
-        self.__url = url
-
-    @property
     def playlist_id(self) -> str:
         return self.__playlist_id
 
     @property
     def total_duration(self) -> datetime:
         return self.__total_duration
+
+    @classmethod
+    def get_service(cls) -> Resource:
+        """Создаёт специальный объект для работы с API"""
+
+        # API_KEY скопирован из гугла и вставлен в переменные окружения
+        api_key: str = os.getenv(cls.name_key)
+        manager = build(cls.service, cls.version, developerKey=api_key)
+
+        return manager
 
     def get_playlist_info(self) -> dict:
         """Возвращает данные о плейлисте по его id"""
