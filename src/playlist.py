@@ -77,7 +77,7 @@ class PlayList(YouTube):
         likes = lambda video: video["statistics"]["likeCount"]
         url = lambda video: video["id"]
 
-        popularity = {likes(video): url(video) for video in videos_info["items"]}
+        popularity = {int(likes(video)): url(video) for video in videos_info["items"]}
         best_video = popularity[max(popularity.keys())]
 
         return f"https://youtu.be/{best_video}"
