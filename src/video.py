@@ -10,12 +10,16 @@ class Video(YouTube):
         # noinspection PyMissingConstructor
 
         self._video_id = video_id
-        self._title = None
-        self._url = None
-        self._views_count = None
-        self._likes_count = None
 
-        self.set_atr()
+        try:
+            self.set_atr()
+
+        except IndexError:
+
+            self._title = None
+            self._url = None
+            self._views_count = None
+            self._like_count = None
 
     @property
     def video_id(self) -> str:
@@ -24,7 +28,6 @@ class Video(YouTube):
     @video_id.setter
     def video_id(self, video_id: str):
         self._video_id = video_id
-        self.set_atr()
 
     @property
     def title(self) -> str:
@@ -51,12 +54,12 @@ class Video(YouTube):
         self._views_count = views_count
 
     @property
-    def likes_count(self) -> str:
-        return self._likes_count
+    def like_count(self) -> str:
+        return self._like_count
 
-    @likes_count.setter
-    def likes_count(self, likes_count: str):
-        self._likes_count = likes_count
+    @like_count.setter
+    def like_count(self, likes_count: str):
+        self._like_count = likes_count
 
     def get_info(self) -> dict:
         """Получает данные о видео по его id"""
@@ -76,10 +79,10 @@ class Video(YouTube):
 
         video_info = self.get_info()
 
-        self.title = find_value(video_info, "title")
-        self.url = f'https://www.youtube.com/watch?v={find_value(video_info, "id")}'
-        self.views_count = find_value(video_info, "viewCount")
-        self.likes_count = find_value(video_info, "likeCount")
+        self.title = video_info['items'][0]['snippet']['title']
+        self.url = f'https://www.youtube.com/watch?v={self.video_id}'
+        self.views_count = video_info['items'][0]['statistics']['viewCount']
+        self.like_count = video_info['items'][0]['statistics']['likeCount']
 
     def __str__(self) -> str:
         """Возвращает строку в формате: `<название_видео>`"""
